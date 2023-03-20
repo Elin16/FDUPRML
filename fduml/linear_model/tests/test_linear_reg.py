@@ -14,7 +14,6 @@ def test_linear_regression():
 
     reg = LinearRegression()
     reg.fit(X, Y)
-
     assert_array_almost_equal(reg.coef_, [1])
     assert_array_almost_equal(reg.intercept_, [0])
     assert_array_almost_equal(reg.predict(X), Y)
@@ -29,3 +28,4 @@ def test_linear_regression():
     assert_array_almost_equal(reg.intercept_, [0])
     assert_array_almost_equal(reg.predict(X), Y)
 
+test_linear_regression()

@@ -26,10 +26,10 @@ class LinearRegression(LinearModel):
         L2 regularization strength.
     """
 
-    def __init__(self, reg=0.0):
+    def __init__(self, reg = 0.0):
         self.coef_ = None
         self.intercept_ = None
-
+        self.lamda = None
         self.reg_ = reg
 
     def fit(self, X, y):
@@ -58,7 +58,21 @@ class LinearRegression(LinearModel):
         # Do not forget the self.reg_ item.                                       #
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+        
+        # Add a column of ones to X for the intercept term
+        X = np.concatenate([np.ones((X.shape[0], 1)), X], axis=1)
+        
+        xTx = np.dot(X.T, X)
+        if np.linalg.matrix_rank(xTx) < min(xTx.shape[0], xTx.shape[1]):
+            self.reg_ = 1
+            
+        # solve the linear system using OLS
+        A = xTx + self.reg_ * np.eye(X.shape[1])
+        b = np.dot(X.T, y)
+        self.coef_ = np.linalg.solve(A, b)
+        # store the intercept separately
+        self.intercept_ = self.coef_[0]
+        self.coef_ = self.coef_[1:].reshape(1)
         pass
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
@@ -85,7 +99,12 @@ class LinearRegression(LinearModel):
         # Implement this method. Store the predicted values in y_pred.            #
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
+        # Add a column of ones to X for the intercept term
+        X = np.concatenate([np.ones((X.shape[0], 1)), X], axis=1)
+        w = np.hstack((self.intercept_, self.coef_))
+        # Predict target values
+        y_pred = w.dot(X.T)
+        y_pred = y_pred.reshape((y_pred.shape[0], 1))
         pass
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
