@@ -2,7 +2,8 @@
 K-nearest Neighbor Algorithm
 """
 import numpy as np
-
+from sklearn.preprocessing import StandardScaler
+from collections import Counter
 class KNeighborsClassifier(object):
     """
     Classifier implementing the k-nearest neighbors vote with L2 distance.
@@ -44,12 +45,21 @@ class KNeighborsClassifier(object):
         # self.X_train and self.y_train directly                                  #
         ###########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-        pass
-
+        # can be better, normalize each diamond to reduce the influence caused by the difference of units
+        
+        self.X_train = X
+        self.y_train = y
+        
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return self
-
+    
+    def __normalize(self, x):
+        max_x = max(x)
+        min_x = min(x)
+        if max_x == min_x:
+            min_x = 0
+        return x/(max_x - min_x)
+    
     def predict(self, X):
         """Predict the class labels for the provided data.
 
@@ -103,8 +113,7 @@ class KNeighborsClassifier(object):
                 # not use a loop over dimension, nor use np.linalg.norm().          #
                 #####################################################################
                 # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-                pass
+                dists[i][j] = np.linalg.norm(X[i] - self.X_train[j])
 
                 # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
@@ -127,7 +136,7 @@ class KNeighborsClassifier(object):
             #######################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-            pass
+            dists[i, :] = np.sqrt(np.sum(np.square(self.X_train - X[i]), axis=1)) 
 
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
@@ -156,8 +165,15 @@ class KNeighborsClassifier(object):
         #########################################################################
         # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
-        pass
-
+        # Compute the squared norms of each row in X and self.X_train
+        test_norms = np.sum(np.square(X), axis=1)
+        train_norms = np.sum(np.square(self.X_train), axis=1)
+        
+        # Compute the dot product between each test point and each training point
+        dot_products = np.dot(X, self.X_train.T)
+        
+        # Compute the pairwise distances using the formula ||x - y||^2 = ||x||^2 - 2xy + ||y||^2
+        dists = np.sqrt(test_norms.reshape(-1, 1) - 2 * dot_products + train_norms)
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return dists
 
@@ -190,9 +206,8 @@ class KNeighborsClassifier(object):
             # Hint: Look up the function numpy.argsort.                             #
             #########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-            pass
-
+            sorted = np.argsort(dists[i])
+            closest_y = self.y_train[sorted]
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
             ##########################################################################
             # TODO:                                                                  #
@@ -202,9 +217,8 @@ class KNeighborsClassifier(object):
             # the smaller label.                                                     #
             ##########################################################################
             # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-
-
+            freq_counter = Counter([closest_y[i] for i in range(self.k)])
+            y_pred[i] = freq_counter.most_common(1)[0][0]
             # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
 
         return y_pred

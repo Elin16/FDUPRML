@@ -33,3 +33,5 @@ def test_kneighbors_classifier(
     knn.fit(X, y)
     y_pred = knn.predict(X[:num_test] + epsilon)
     assert_array_equal(y_pred, y[:num_test])
+    
+test_kneighbors_classifier()

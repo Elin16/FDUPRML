@@ -28,7 +28,10 @@ def accuracy_score(y_true, y_pred):
     # Calculate the accuracy.                                               #
     #########################################################################
     # *****START OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
-
-
+    acc = 0
+    for i in range(0, len(y_true)):
+        if y_pred[i] == y_true[i]:
+            acc = acc + 1
+    acc = (acc + 0.0) / (len(y_true) + 0.0)
     # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
     return acc

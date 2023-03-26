@@ -73,7 +73,6 @@ class LinearRegression(LinearModel):
         # store the intercept separately
         self.intercept_ = self.coef_[0]
         self.coef_ = self.coef_[1:].reshape(1)
-        pass
 
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         assert self.coef_ is not None
@@ -105,7 +104,5 @@ class LinearRegression(LinearModel):
         # Predict target values
         y_pred = w.dot(X.T)
         y_pred = y_pred.reshape((y_pred.shape[0], 1))
-        pass
-
         # *****END OF YOUR CODE (DO NOT DELETE/MODIFY THIS LINE)*****
         return y_pred
