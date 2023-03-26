@@ -24,3 +24,5 @@ def test_softmax():
 
     assert predicted.shape == (n_samples,)
     assert_array_equal(predicted, y)
+    
+test_softmax()

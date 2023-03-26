@@ -34,4 +34,7 @@ def test_dt_classification():
     true_result = np.array([-1, -1, -1])
     dt_clf = DecisionTreeClassifier(criterion = criterion, random_state=0)
     dt_clf.fit(X, y)
+    print(dt_clf.predict(T))
     assert_array_equal(dt_clf.predict(T), true_result, "Failed with {}".format(criterion))
+
+test_dt_classification()
